@@ -1,63 +1,77 @@
 import random
 
-words = ['python', 'java', 'kotlin', 'javascript']
-guess = random.choice(words)
-hint = ('-' * len(guess))
 
-print('H A N G M A N\n')
+def playAgain():
+    flag = True
+    while flag:
+        dec = input('Do you want to play again(y or n): ')
+        if dec == 'y':
+            hangman()
+            flag == False
+        elif dec == 'n':
+            exit()
+    
 
-# Main game
-def play():
-    life = 8
+def hangman():
+    quote = ("So You Have Great Memmory Power...\nYou Have Entered The Letter Already, Idiot...", "Do You Heard of Alzheimer's Disease\nYou Have Entered The Letter Already, Mr. Big Brain...")
+    words = ('python', 'java', 'javascript', 'kotlin', 'bash', 'git', 'flutter', 'php', 'node', 'react', 'html', 'css', 'sass', 'express', 'sql', 'objectivec', 'scala', 'ruby', 'vue')
+    choice = random.choice(words)
+    validLetters = 'abcdefghijklmnopqrstuvwxyz'
+    turns = 10
     guesses = []
-    wrong_guess = []
-    while life > 0:
-        dis_word: str = ''
-        letter = input('Input a letter: ')
+    wrong_gusses = []
+    show = '-'*len(choice)
+    print("H A N G M A N")
+    print(show)
 
-        # checking user inputs
-        if letter in guesses or letter in wrong_guess:
-            print("You've already guessed this letter")
-        else:
-            if letter in guess:
-                guesses.append(letter)
+    while turns > 0:
+        f1 = open("name.txt", "r")
+        n = f1.read()
+        hint = ''
+        guess = input('Input a letter: ')
+
+        if guess not in guesses and guess not in wrong_gusses:
+            if guess in choice:
+                guesses.append(guess)
+            elif guess not in validLetters:
+                print('Please Enter A Valid English Small Letter')
             else:
-                if len(letter) > 1:
-                    print("You should input a single letter")
-                elif not letter.isalpha() or not letter.islower():
-                    print("Please enter a lowercase English letter")
+                print(f"OOPS! {n} You Are Gonna Kill Me!")
+                turns -= 1
+                wrong_gusses.append(guess)
+
+            for letter in choice:
+                if letter in guesses:
+                    hint += letter
                 else:
-                    print("That letter doesn't appear in the word")
-                    wrong_guess.append(letter)
-                    life -= 1
-                    
-       
-        # Displaying hint without the enumerate method
-        for char in guess:
-            if char in guesses:
-                dis_word += char
-            else:
-                dis_word += "-"
+                    hint += '-'
+        else:
+            random_quote = random.choice(quote)
+            print(random_quote)
 
-        if life > 0 and dis_word != guess:
-            print('\n', dis_word)
-        if dis_word == guess:
-            print(f"You guessed the word {guess}!")
-            print("You survived!")
-            break
+        if hint == choice:
+            print(choice,'\n')
+            print('Coongratulations For Winning...\n And Thanks For Saving Me :)')
+            playAgain()
+
+        print(hint)
+
     else:
-        print("You lost!")
-        exit()
+        print("You Failed...\n And I Dead :(")
+        playAgain()
 
-# Do you really want to play this boring game :)
 def main():
-    while True:
-        decision = input("Type \"play\" to play the game, \"exit\" to quit: ")
-        if decision == "play":
-            print(hint)
-            play()
-        elif decision == "exit":
-            break
+    name = input("Enter Your Name: ")
+    f = open("name.txt","w+")
+    f.write(name)
+    f.close()
+    print("Welcome", name)
+    print("##########################")
+    print("Try to guess the word in less than 10 attempts.\n")
+
+    hangman()
 
 
-main()
+if __name__=='__main__':
+    main()
+
