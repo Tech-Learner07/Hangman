@@ -1,5 +1,22 @@
 import random
 
+'''
+stages:
+1: ''
+2: '________'
+3: '     | '
+4: '     0 '
+5: '    /|\'
+6: '    / \'
+
+Complete Hangman Graphics.
+________       
+      |       
+      0       
+     /|\      
+     / \      
+'''
+stages = ["", "________      ", "|      |      ", "|      0      ", "|     /|\     ", "|     / \     ", "|"]
 # A play again command
 def playAgain():
     flag = True
@@ -20,21 +37,20 @@ def hangman():
     choice = random.choice(words)
     # The Valid Letter variable. Greater then the previous complex loops
     validLetters = 'abcdefghijklmnopqrstuvwxyz'
-    turns = 10
     guesses = []
-    wrong_gusses = []
+    wrong_guesses = []
     show = '-'*len(choice)
     print("H A N G M A N")
     print(show)
 
-    while turns > 0:
+    while len(wrong_guesses) < len(stages) - 1:
         # Name will be added to a file called name. Replaced in every restart. Go To line 67 for more details.
         f1 = open("name.txt", "r")
         n = f1.read()
         hint = ''
         guess = input('Input a letter: ')
 
-        if guess not in guesses and guess not in wrong_gusses:
+        if guess not in guesses and guess not in wrong_guesses:
             if guess in choice:
                 guesses.append(guess)
             elif guess not in validLetters:
@@ -42,8 +58,7 @@ def hangman():
             else:
                 # Here {n} is the name from the file.
                 print(f"OOPS! {n} You Are Gonna Kill Me!")
-                turns -= 1
-                wrong_gusses.append(guess)
+                wrong_guesses.append(guess)
             # For showing the hint
             for letter in choice:
                 if letter in guesses:
@@ -62,9 +77,11 @@ def hangman():
             playAgain()
 
         print(hint)
+        print('\n'.join(stages[0: len(wrong_guesses) + 1]))
 
     else:
         print("You Failed...\n And I Dead :(")
+        print('\n'.join(stages[0: len(wrong_guesses)]))
         # Do you want to kill me again :)
         playAgain()
 
